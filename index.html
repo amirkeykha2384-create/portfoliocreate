@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amirreza Keykha | Short-Form & Talking-Head Video Editor</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-canvas: #07090e;
+      --bg-surface: #0e121b;
+      --bg-card: #111622;
+      --border-hairline: rgba(148, 163, 184, 0.13);
+      --accent-primary: #818cf8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: #f4f4f5;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    html[dir="rtl"] body {
+      font-family: 'Vazirmatn', 'Inter', system-ui, sans-serif;
+    }
+
+    .font-editorial {
+      font-family: 'Instrument Serif', Georgia, serif;
+    }
+
+    html[dir="rtl"] .font-editorial {
+      font-family: 'Vazirmatn', system-ui, sans-serif;
+      font-style: normal;
+      font-weight: 800;
+    }
+
+    .font-mono-code {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+    }
+
+    .canvas-backdrop {
+      background-image:
+        radial-gradient(ellipse 75% 44% at 50% -8%, rgba(99, 102, 241, 0.19), transparent 64%),
+        radial-gradient(circle at 82% 20%, rgba(56, 189, 248, 0.09), transparent 40%),
+        linear-gradient(to right, rgba(148, 163, 184, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 64px 64px, 64px 64px;
+    }
+
+    .accent-editorial {
+      background: linear-gradient(135deg, #c7d2fe 0%, #818cf8 55%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .editorial-card {
+      background: linear-gradient(180deg, rgba(17, 22, 34, 0.92) 0%, rgba(11, 15, 24, 0.97) 100%);
+      border: 1px solid var(--border-hairline);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease, box-shadow 0.3s ease;
+    }
+
+    .editorial-card:hover {
+      border-color: rgba(129, 140, 248, 0.45);
+      box-shadow: 0 24px 52px -20px rgba(2, 6, 23, 0.9), 0 0 0 1px rgba(129, 140, 248, 0.15);
+    }
+
+    .portrait-frame {
+      box-shadow: 0 32px 70px -24px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.09);
+    }
+
+    video.reel-video {
+      background-color: #050507;
+    }
+
+    @keyframes pulseSoft {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.85); }
+    }
+
+    .live-dot {
+      animation: pulseSoft 2.2s ease-in-out infinite;
+    }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #07090e; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+  </style>
+</head>
+<body class="canvas-backdrop min-h-screen selection:bg-indigo-500/35 selection:text-indigo-100">
+
+  <!-- Minimal Sticky Header -->
+  <header class="sticky top-0 z-40 border-b border-white/10 bg-[#07090e]/85 backdrop-blur-xl">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-6">
+      <a href="#top" class="flex items-center gap-2.5 group">
+        <div class="flex h-9 w-9 items-center justify-center rounded-lg border border-indigo-400/35 bg-indigo-400/10 font-mono-code text-sm font-semibold text-indigo-300 transition group-hover:bg-indigo-400/20">
+          AK
+        </div>
+        <div class="leading-tight">
+          <div class="text-sm font-semibold tracking-tight text-zinc-100" data-i18n="brandName">Amirreza Keykha</div>
+          <div class="font-mono-code text-[10px] tracking-wider text-zinc-400" data-i18n="brandRole">VIDEO EDITOR</div>
+        </div>
+      </a>
+
+      <nav class="hidden items-center gap-8 text-sm text-zinc-400 md:flex">
+        <a href="#work" class="transition hover:text-zinc-100" data-i18n="navWork">Selected Reels</a>
+        <a href="#craft" class="transition hover:text-zinc-100" data-i18n="navCraft">How I Edit</a>
+        <a href="#contact" class="transition hover:text-zinc-100" data-i18n="navContact">Contact</a>
+      </nav>
+
+      <div class="flex items-center gap-2.5">
+        <button id="langToggleBtn" type="button" class="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.04] px-2.5 py-1.5 text-xs font-medium text-zinc-200 transition hover:border-indigo-400/40 hover:text-indigo-200" aria-label="Switch Language">
+          <i data-lucide="globe" class="h-3.5 w-3.5 text-indigo-400"></i>
+          <span id="langToggleLabel">فارسی</span>
+        </button>
+        <a href="#contact" class="hidden rounded-lg bg-indigo-500 px-3.5 py-1.5 text-xs font-semibold text-white transition hover:bg-indigo-400 sm:inline-flex sm:items-center sm:gap-1.5">
+          <span data-i18n="navCta">Let's Talk</span>
+          <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+        </a>
+        <button id="mobileMenuBtn" type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-zinc-200 md:hidden" aria-label="Menu">
+          <i data-lucide="menu" class="h-4 w-4"></i>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobileMenu" class="hidden border-t border-white/10 bg-[#0c1019] px-4 py-4 md:hidden">
+      <div class="flex flex-col gap-3 text-sm text-zinc-300">
+        <a href="#work" class="mobile-nav-link py-1 hover:text-indigo-300" data-i18n="navWork">Selected Reels</a>
+        <a href="#craft" class="mobile-nav-link py-1 hover:text-indigo-300" data-i18n="navCraft">How I Edit</a>
+        <a href="#contact" class="mobile-nav-link py-1 hover:text-indigo-300" data-i18n="navContact">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero & Personal Introduction with Studio Portrait -->
+    <section class="relative mx-auto max-w-6xl px-4 pb-16 pt-12 sm:px-6 lg:pb-24 lg:pt-16">
+      <div class="grid items-center gap-12 lg:grid-cols-12">
+        <!-- Left Personal Intro & Value Proposition -->
+        <div class="lg:col-span-7">
+          <div class="mb-6 inline-flex items-center gap-2.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-medium text-emerald-300">
+            <span class="live-dot h-2 w-2 rounded-full bg-emerald-400"></span>
+            <span data-i18n="heroBadge">Available for New Projects</span>
+          </div>
+
+          <h1 class="text-4xl font-semibold leading-[1.08] tracking-tight text-zinc-50 sm:text-5xl lg:text-[3.5rem]">
+            <span data-i18n="heroHeadline1">Raw talking-head clips, turned into Reels people</span>
+            <span class="font-editorial italic font-normal accent-editorial" data-i18n="heroHeadlineAccent">actually finish.</span>
+          </h1>
+
+          <div class="mt-6 max-w-xl space-y-3.5 text-base leading-relaxed text-zinc-300">
+            <p data-i18n="heroBio1">
+              I'm Amirreza Keykha, a short-form video editor and motion designer. I work with founders, coaches, real estate brands, and podcast hosts who want clean, sharp vertical videos without recycled templates.
+            </p>
+            <p class="text-sm leading-relaxed text-zinc-400" data-i18n="heroBio2">
+              Every cut is crafted in Premiere Pro and After Effects, supported selectively by modern AI tools for custom B-roll and visual assets without losing human pacing or creative control.
+            </p>
+          </div>
+
+          <div class="mt-8 flex flex-wrap items-center gap-3.5">
+            <a href="#work" class="inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition hover:bg-indigo-400">
+              <i data-lucide="play" class="h-4 w-4 fill-white"></i>
+              <span data-i18n="heroCtaWork">Watch 5 Full Edits</span>
+            </a>
+            <a href="#contact" class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-5 py-3 text-sm font-medium text-zinc-100 transition hover:border-indigo-400/45 hover:bg-white/[0.08]">
+              <i data-lucide="message-square" class="h-4 w-4 text-indigo-300"></i>
+              <span data-i18n="heroCtaContact">Get in Touch</span>
+            </a>
+          </div>
+
+          <!-- Clean Proof Strip -->
+          <div class="mt-10 grid grid-cols-3 gap-4 border-t border-slate-800/80 pt-7">
+            <div>
+              <div class="font-mono-code text-lg font-semibold text-zinc-100 sm:text-xl" data-i18n="stat1Title">Short-Form</div>
+              <div class="mt-0.5 text-xs text-slate-400" data-i18n="stat1">Reels, Shorts & TikTok</div>
+            </div>
+            <div>
+              <div class="font-mono-code text-lg font-semibold text-slate-100 sm:text-xl" data-i18n="stat2Title">Custom</div>
+              <div class="mt-0.5 text-xs text-slate-400" data-i18n="stat2">Motion & Sound Design</div>
+            </div>
+            <div>
+              <div class="font-mono-code text-lg font-semibold text-slate-100 sm:text-xl" data-i18n="stat3Title">Remote</div>
+              <div class="mt-0.5 text-xs text-slate-400" data-i18n="stat3">Worldwide Clients</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Studio Portrait Card -->
+        <div class="lg:col-span-5">
+          <div class="relative mx-auto max-w-[380px]">
+            <div class="pointer-events-none absolute -inset-6 rounded-full bg-indigo-500/12 blur-3xl"></div>
+            <div class="portrait-frame relative overflow-hidden rounded-[2rem] bg-[#0f1420] p-2.5">
+              <div class="relative aspect-[3/4] w-full overflow-hidden rounded-[1.5rem] bg-zinc-950">
+                <img
+                  src="media/portrait.jpg"
+                  alt="Amirreza Keykha — Video Editor"
+                  class="h-full w-full object-cover object-top"
+                />
+                <div class="pointer-events-none absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                <div class="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-2">
+                  <div>
+                    <div class="text-base font-semibold text-white" data-i18n="portraitName">Amirreza Keykha</div>
+                    <div class="font-mono-code text-[11px] text-indigo-300" data-i18n="portraitSub">Short-Form & Motion Editor</div>
+                  </div>
+                  <span class="rounded-full border border-white/15 bg-black/60 px-2.5 py-1 font-mono-code text-[10px] text-zinc-200 backdrop-blur-md">
+                    Premiere · AE · AI
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Selected Work: Full Playable Video Portfolio -->
+    <section id="work" class="mx-auto max-w-6xl scroll-mt-20 border-t border-white/10 px-4 py-16 sm:px-6 lg:py-20">
+      <div class="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <div>
+          <div class="font-mono-code text-xs uppercase tracking-widest text-indigo-400" data-i18n="workEyebrow">01 / SELECTED REELS</div>
+          <h2 class="mt-2 text-3xl font-semibold tracking-tight text-zinc-50 sm:text-4xl">
+            <span data-i18n="workTitle1">Five full edits.</span>
+            <span class="font-editorial italic font-normal accent-editorial" data-i18n="workTitle2">Five distinct styles.</span>
+          </h2>
+          <p class="mt-2.5 max-w-xl text-sm text-zinc-400" data-i18n="workSub">
+            Press play directly on any reel to watch with full audio, or open Cinema Mode for the full-screen view and editing notes.
+          </p>
+        </div>
+
+        <div id="filterBar" class="flex flex-wrap gap-2"></div>
+      </div>
+
+      <!-- 9:16 Real Video Grid -->
+      <div id="portfolioGrid" class="mt-10 grid gap-7 sm:grid-cols-2 lg:grid-cols-3"></div>
+    </section>
+
+    <!-- How I Edit / Craft Standards -->
+    <section id="craft" class="mx-auto max-w-6xl scroll-mt-20 border-t border-white/10 px-4 py-16 sm:px-6 lg:py-20">
+      <div class="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+        <div>
+          <div class="font-mono-code text-xs uppercase tracking-widest text-indigo-400" data-i18n="craftEyebrow">02 / HOW I EDIT</div>
+          <h2 class="mt-2 text-3xl font-semibold tracking-tight text-zinc-50 sm:text-4xl">
+            <span data-i18n="craftTitle1">Built for retention,</span>
+            <span class="font-editorial italic font-normal accent-editorial" data-i18n="craftTitle2">styled for your brand.</span>
+          </h2>
+        </div>
+        <p class="max-w-md text-sm text-zinc-400" data-i18n="craftSub">
+          Every project gets its own visual language. Here is what goes into each cut before it reaches your feed.
+        </p>
+      </div>
+
+      <div id="craftGrid" class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4"></div>
+
+      <!-- Clean Tool Stack Strip -->
+      <div class="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-[#0e131e] px-5 py-4">
+        <span class="font-mono-code text-xs uppercase tracking-wider text-zinc-400" data-i18n="stackLabel">CORE TOOLS</span>
+        <div class="flex flex-wrap gap-2 text-xs text-zinc-300">
+          <span class="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5">Adobe Premiere Pro</span>
+          <span class="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5">Adobe After Effects</span>
+          <span class="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5" data-i18n="toolAi">AI-Assisted Workflow</span>
+          <span class="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5" data-i18n="toolColor">Color Grading & LUTs</span>
+          <span class="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5" data-i18n="toolSound">Sound Design & Mix</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Direct Contact Section: LinkedIn, Instagram, Email -->
+    <section id="contact" class="mx-auto max-w-6xl scroll-mt-20 border-t border-white/10 px-4 py-16 sm:px-6 lg:py-24">
+      <div class="editorial-card overflow-hidden rounded-[2rem] p-7 sm:p-12">
+        <div class="mx-auto max-w-2xl text-center">
+          <div class="font-mono-code text-xs uppercase tracking-widest text-indigo-400" data-i18n="contactEyebrow">03 / GET IN TOUCH</div>
+          <h2 class="mt-3 text-3xl font-semibold tracking-tight text-zinc-50 sm:text-5xl">
+            <span data-i18n="contactTitle1">Have raw footage ready?</span>
+            <span class="font-editorial italic font-normal accent-editorial" data-i18n="contactTitle2">Let's talk.</span>
+          </h2>
+          <p class="mt-4 text-sm leading-relaxed text-zinc-400 sm:text-base" data-i18n="contactSub">
+            Whether you want to book a project, send a sample clip, or ask about collaboration, reach out directly through any of the three channels below. I reply within 12 hours.
+          </p>
+        </div>
+
+        <!-- 3 Direct Contact Cards -->
+        <div class="mt-10 grid gap-4 md:grid-cols-3">
+          <!-- LinkedIn -->
+          <div class="flex flex-col justify-between rounded-2xl border border-white/10 bg-[#0b0f18] p-6 transition hover:border-indigo-400/45">
+            <div>
+              <div class="flex items-center justify-between">
+                <div class="flex h-11 w-11 items-center justify-center rounded-xl border border-indigo-400/25 bg-indigo-400/10 text-indigo-300">
+                  <i data-lucide="linkedin" class="h-5 w-5"></i>
+                </div>
+                <span class="font-mono-code text-[11px] text-zinc-500">01</span>
+              </div>
+              <h3 class="mt-5 text-lg font-semibold text-zinc-100">LinkedIn</h3>
+              <p class="mt-1 text-xs text-zinc-400" data-i18n="liDesc">Best for agencies, founders & long-term work.</p>
+              <div id="displayLinkedin" class="mt-3 truncate font-mono-code text-xs text-indigo-300">linkedin.com/in/amirreza-keykha</div>
+            </div>
+            <div class="mt-6 flex items-center gap-2">
+              <a id="btnLinkedin" href="https://www.linkedin.com/in/amirreza-keykha" target="_blank" rel="noopener noreferrer" class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-indigo-500 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-indigo-400">
+                <span data-i18n="openLinkedin">Message on LinkedIn</span>
+                <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+              </a>
+              <button type="button" data-copy-key="linkedin" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-zinc-300 transition hover:border-indigo-400/40 hover:text-indigo-300" aria-label="Copy LinkedIn">
+                <i data-lucide="copy" class="h-3.5 w-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Instagram -->
+          <div class="flex flex-col justify-between rounded-2xl border border-white/10 bg-[#0b0f18] p-6 transition hover:border-indigo-400/45">
+            <div>
+              <div class="flex items-center justify-between">
+                <div class="flex h-11 w-11 items-center justify-center rounded-xl border border-indigo-400/25 bg-indigo-400/10 text-indigo-300">
+                  <i data-lucide="instagram" class="h-5 w-5"></i>
+                </div>
+                <span class="font-mono-code text-[11px] text-zinc-500">02</span>
+              </div>
+              <h3 class="mt-5 text-lg font-semibold text-zinc-100">Instagram</h3>
+              <p class="mt-1 text-xs text-zinc-400" data-i18n="igDesc">Quick DMs, latest Reels & before/after breakdowns.</p>
+              <div id="displayInstagram" class="mt-3 truncate font-mono-code text-xs text-indigo-300">@amirreza.edits</div>
+            </div>
+            <div class="mt-6 flex items-center gap-2">
+              <a id="btnInstagram" href="https://www.instagram.com/amirreza.edits" target="_blank" rel="noopener noreferrer" class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-indigo-500 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-indigo-400">
+                <span data-i18n="openInstagram">DM on Instagram</span>
+                <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+              </a>
+              <button type="button" data-copy-key="instagram" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-zinc-300 transition hover:border-indigo-400/40 hover:text-indigo-300" aria-label="Copy Instagram">
+                <i data-lucide="copy" class="h-3.5 w-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="flex flex-col justify-between rounded-2xl border border-white/10 bg-[#0b0f18] p-6 transition hover:border-indigo-400/45">
+            <div>
+              <div class="flex items-center justify-between">
+                <div class="flex h-11 w-11 items-center justify-center rounded-xl border border-indigo-400/25 bg-indigo-400/10 text-indigo-300">
+                  <i data-lucide="mail" class="h-5 w-5"></i>
+                </div>
+                <span class="font-mono-code text-[11px] text-zinc-500">03</span>
+              </div>
+              <h3 class="mt-5 text-lg font-semibold text-zinc-100" data-i18n="emailTitle">Email</h3>
+              <p class="mt-1 text-xs text-zinc-400" data-i18n="emailDesc">Send footage links, project briefs & references.</p>
+              <div id="displayEmail" class="mt-3 truncate font-mono-code text-xs text-indigo-300">amirreza.keykha@gmail.com</div>
+            </div>
+            <div class="mt-6 flex items-center gap-2">
+              <a id="btnEmail" href="mailto:amirreza.keykha@gmail.com" class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-indigo-500 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-indigo-400">
+                <span data-i18n="openEmail">Send an Email</span>
+                <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+              </a>
+              <button type="button" data-copy-key="email" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-zinc-300 transition hover:border-indigo-400/40 hover:text-indigo-300" aria-label="Copy Email">
+                <i data-lucide="copy" class="h-3.5 w-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Minimal Footer -->
+  <footer class="border-t border-white/10 bg-[#05070b] py-8">
+    <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 text-xs text-zinc-500 sm:flex-row sm:px-6">
+      <div>© 2026 Amirreza Keykha. <span data-i18n="footerRights">Short-Form Video Editing & Motion Graphics.</span></div>
+      <button id="openSettingsBtn" type="button" class="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-zinc-300 transition hover:border-indigo-400/40 hover:text-indigo-200">
+        <i data-lucide="sliders-horizontal" class="h-3.5 w-3.5 text-indigo-400"></i>
+        <span data-i18n="customizeLinks">Edit My Contact Links</span>
+      </button>
+    </div>
+  </footer>
+
+  <!-- Cinema Full-Video Lightbox Modal -->
+  <div id="cinemaModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/88 p-3 backdrop-blur-md sm:p-6" role="dialog" aria-modal="true">
+    <div class="relative flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl border border-white/15 bg-[#0e121c] shadow-2xl lg:flex-row">
+      <button id="closeCinemaBtn" type="button" class="absolute end-3.5 top-3.5 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-black/75 text-zinc-200 transition hover:border-indigo-400 hover:text-white" aria-label="Close">
+        <i data-lucide="x" class="h-4 w-4"></i>
+      </button>
+
+      <!-- Left: Full HTML5 Video Player -->
+      <div class="flex items-center justify-center bg-black p-4 sm:p-6 lg:w-[46%]">
+        <div class="relative aspect-[9/16] w-full max-w-[290px] overflow-hidden rounded-2xl border border-white/15 bg-black shadow-2xl sm:max-w-[320px]">
+          <video id="modalVideoPlayer" class="reel-video h-full w-full object-contain" controls playsinline preload="metadata"></video>
+        </div>
+      </div>
+
+      <!-- Right: Editorial Notes -->
+      <div class="flex flex-1 flex-col justify-between overflow-y-auto p-6 sm:p-8">
+        <div>
+          <div id="modalTag" class="font-mono-code text-xs uppercase tracking-wider text-indigo-400"></div>
+          <h3 id="modalTitle" class="mt-2 text-2xl font-semibold text-zinc-50"></h3>
+          <p id="modalSummary" class="mt-3 text-sm leading-relaxed text-zinc-400"></p>
+
+          <div class="mt-6 grid grid-cols-3 gap-2.5">
+            <div class="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+              <div class="font-mono-code text-[10px] text-zinc-500" data-i18n="specDuration">DURATION</div>
+              <div id="modalDuration" class="mt-0.5 font-mono-code text-sm font-medium text-zinc-100"></div>
+            </div>
+            <div class="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+              <div class="font-mono-code text-[10px] text-zinc-500" data-i18n="specFormat">FORMAT</div>
+              <div class="mt-0.5 font-mono-code text-sm font-medium text-zinc-100" data-i18n="formatVal">Vertical Reel</div>
+            </div>
+            <div class="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+              <div class="font-mono-code text-[10px] text-zinc-500" data-i18n="specPalette">PALETTE</div>
+              <div id="modalPalette" class="mt-1.5 flex items-center gap-1.5"></div>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <div class="font-mono-code text-[11px] uppercase tracking-wider text-zinc-400" data-i18n="whatIDid">EDITING BREAKDOWN</div>
+            <ul id="modalHighlights" class="mt-3 space-y-2.5 text-xs leading-relaxed text-zinc-300"></ul>
+          </div>
+        </div>
+
+        <div class="mt-7 flex flex-wrap items-center gap-3 border-t border-white/10 pt-5">
+          <a href="#contact" id="modalContactJump" class="inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-indigo-400">
+            <i data-lucide="message-square" class="h-3.5 w-3.5"></i>
+            <span data-i18n="wantSimilar">Want a similar edit? Contact me</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Customize Contact Links Modal -->
+  <div id="settingsModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4 backdrop-blur-md" role="dialog" aria-modal="true">
+    <div class="w-full max-w-md rounded-3xl border border-white/15 bg-[#0f1420] p-6 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4">
+        <div>
+          <h3 class="text-base font-semibold text-zinc-100" data-i18n="settingsTitle">Edit Your Contact Links</h3>
+          <p class="mt-0.5 text-xs text-zinc-400" data-i18n="settingsSub">Update your exact LinkedIn, Instagram handle, and Email.</p>
+        </div>
+        <button id="closeSettingsBtn" type="button" class="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 text-zinc-300 hover:bg-white/10">
+          <i data-lucide="x" class="h-4 w-4"></i>
+        </button>
+      </div>
+
+      <form id="settingsForm" class="mt-4 space-y-3.5">
+        <div>
+          <label for="cfgLinkedin" class="mb-1 block text-xs text-zinc-400">LinkedIn URL</label>
+          <input id="cfgLinkedin" type="url" required class="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-zinc-100 outline-none focus:border-indigo-400/50" />
+        </div>
+        <div>
+          <label for="cfgInstagram" class="mb-1 block text-xs text-zinc-400">Instagram URL</label>
+          <input id="cfgInstagram" type="url" required class="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-zinc-100 outline-none focus:border-indigo-400/50" />
+        </div>
+        <div>
+          <label for="cfgEmail" class="mb-1 block text-xs text-zinc-400">Email Address</label>
+          <input id="cfgEmail" type="email" required class="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-zinc-100 outline-none focus:border-indigo-400/50" />
+        </div>
+        <div class="flex items-center justify-end gap-2.5 pt-2">
+          <button id="resetSettingsBtn" type="button" class="rounded-xl border border-white/10 px-3.5 py-2 text-xs text-zinc-400 hover:text-zinc-200" data-i18n="btnReset">Reset</button>
+          <button type="submit" class="rounded-xl bg-indigo-500 px-4 py-2 text-xs font-semibold text-white hover:bg-indigo-400" data-i18n="btnSave">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="pointer-events-none fixed bottom-5 left-1/2 z-50 -translate-x-1/2 translate-y-4 rounded-xl border border-indigo-400/35 bg-[#111625]/95 px-4 py-2.5 text-xs font-medium text-zinc-100 opacity-0 shadow-2xl transition duration-300"></div>
+
+  <script>
+    // =========================================================================
+    // 1. CONTACT CONFIGURATION (Editable via UI or directly in code)
+    // =========================================================================
+    const DEFAULT_CONFIG = {
+      linkedin: "https://www.linkedin.com/in/amirreza-keykha",
+      instagram: "https://www.instagram.com/amirreza.edits",
+      email: "amirreza.keykha@gmail.com"
+    };
+
+    function loadConfig() {
+      try {
+        const saved = localStorage.getItem("ak_contact_cfg_v2");
+        return saved ? { ...DEFAULT_CONFIG, ...JSON.parse(saved) } : { ...DEFAULT_CONFIG };
+      } catch (e) {
+        return { ...DEFAULT_CONFIG };
+      }
+    }
+
+    function saveConfig(cfg) {
+      try {
+        localStorage.setItem("ak_contact_cfg_v2", JSON.stringify(cfg));
+      } catch (e) {}
+    }
+
+    // =========================================================================
+    // 2. FIVE FULL PLAYABLE PORTFOLIO VIDEOS (Real MP4s + Real Posters)
+    // =========================================================================
+    const PROJECTS = [
+      {
+        id: "mainrealty",
+        category: "realestate",
+        duration: "00:22",
+        videoSrc: "media/videos/mainrealty.mp4",
+        posterSrc: "media/posters/mainrealty.jpg",
+        palette: ["#0E0E0C", "#D4AF37", "#F5F0E1"],
+        tag: { en: "Luxury Real Estate", fa: "املاک لوکس" },
+        title: { en: "Main Realty Dubai", fa: "مین ریالتی دبی" },
+        summary: {
+          en: "Investor-focused real estate reel combining clean talking-head cuts with 3D gold architectural visuals, off-plan split transitions, and brand-matched typography.",
+          fa: "ریلز سرمایه‌گذاری املاک با ترکیب کات‌های تمیز تاکینگ‌هد، گرافیک سه‌بعدی طلایی معماری، ترنزیشن دوپاره و تایپوگرافی هماهنگ با برند."
+        },
+        highlights: {
+          en: [
+            "Warm gold and dark obsidian palette pulled directly from the brand identity.",
+            "3D architectural blueprint and stacked kinetic typography timed to the hook.",
+            "Split-screen speaker framing paired with 3D growth visuals.",
+            "Unified color grade and subtle film grain across live footage and 3D B-roll."
+          ],
+          fa: [
+            "پالت رنگی طلایی و مشکی دقیقاً هماهنگ با هویت بصری برند.",
+            "موشن‌گرافیک سه‌بعدی معماری و تایپوگرافی کینتیک همگام با هوک.",
+            "قاب‌بندی دوپاره گوینده در کنار گرافیک رشد سرمایه‌گذاری.",
+            "اصلاح رنگ یکپارچه و گرین سینمایی بین فوتیج واقعی و بی-رول سه‌بعدی."
+          ]
+        }
+      },
+      {
+        id: "extortion17",
+        category: "documentary",
+        duration: "00:59",
+        videoSrc: "media/videos/extortion17.mp4",
+        posterSrc: "media/posters/extortion17.jpg",
+        palette: ["#141418", "#E5A93C", "#F4F4F5"],
+        tag: { en: "Documentary & Podcast", fa: "مستند و پادکست" },
+        title: { en: "Extortion 17 Podcast", fa: "پادکست مستند Extortion 17" },
+        summary: {
+          en: "Serious documentary podcast cut built for emotional weight. Uses dark tactical story frames, custom glass stat cards, and clean lower-third context pills.",
+          fa: "تدوین مستندگونه پادکست با تمرکز بر فضاسازی و روایت عمیق، همراه با قاب‌های داستانی تاریک، کارت‌های آماری شیشه‌ای و برچسب‌های پایین کادر."
+        },
+        highlights: {
+          en: [
+            "Restrained amber and slate visual tone suited for serious storytelling.",
+            "Custom dark glass stat cards highlighting key operational numbers.",
+            "Contextual lower-third pills placed cleanly away from the speaker's face.",
+            "Atmospheric B-roll frames paced closely to vocal pauses and breath."
+          ],
+          fa: [
+            "فضاسازی بصری سنگین و جدی با پالت کهربایی و خاکستری.",
+            "کارت‌های آماری شیشه‌ای تیره برای نمایش دقیق اعداد کلیدی داستان.",
+            "برچسب‌های اطلاعاتی پایین کادر بدون تداخل با چهره گوینده.",
+            "چیدمان بی-رول‌های داستانی هماهنگ با مکث‌ها و لحن گوینده."
+          ]
+        }
+      },
+      {
+        id: "jeffsimmons",
+        category: "creator",
+        duration: "00:37",
+        videoSrc: "media/videos/jeffsimmons.mp4",
+        posterSrc: "media/posters/jeffsimmons.jpg",
+        palette: ["#0B0B0D", "#FACC15", "#EF4444"],
+        tag: { en: "Creator & Coaching", fa: "تولید محتوا و کوچینگ" },
+        title: { en: "Thought of the Day", fa: "ریلز آموزشی و انگیزشی" },
+        summary: {
+          en: "High-retention talking-head edit for coaches and speakers. Features depth-masked behind-subject headlines, dark-grid UI cards, and tight rhythmic cuts.",
+          fa: "ادیت پرریتم تاکینگ‌هد برای کوچ‌ها و مدرسان شامل تایپوگرافی پشت سوژه، کارت‌های گرافیکی روی گرید تیره و کات‌های دقیق."
+        },
+        highlights: {
+          en: [
+            "Behind-subject depth-masked headline for an immediate pattern interrupt.",
+            "Custom dark-grid UI cards tied directly to each spoken point.",
+            "High-contrast yellow and white captions anchored cleanly below the mic.",
+            "Three-step visual closing graphic to reinforce the main takeaway."
+          ],
+          fa: [
+            "تایپوگرافی پشت سوژه برای ایجاد تنوع بصری و حفظ توجه مخاطب.",
+            "کارت‌های UI روی گرید تیره دقیقاً متناسب با استعاره‌های کلامی.",
+            "زیرنویس با کنتراست بالا در ناحیه امن بدون پوشاندن صورت.",
+            "جمع‌بندی گرافیکی سه‌مرحله‌ای در پایان برای تثبیت پیام."
+          ]
+        }
+      },
+      {
+        id: "justremember",
+        category: "editorial",
+        duration: "00:21",
+        videoSrc: "media/videos/justremember.mp4",
+        posterSrc: "media/posters/justremember.jpg",
+        palette: ["#EAE6DC", "#183529", "#E5B84B"],
+        tag: { en: "Editorial & Brand", fa: "ادیتوریال و برند" },
+        title: { en: "Just Remember Promo", fa: "تیزر کتاب Just Remember" },
+        summary: {
+          en: "Warm editorial launch reel built around the book's own cream and emerald palette. Pairs interactive cursor overlays with minimalist diagrams and serif captions.",
+          fa: "ریلز تبلیغاتی گرم و مینیمال با پالت کرم و سبز زمردی جلد کتاب، شامل افکت اشاره‌گر موس، نمودارهای کاغذی و تایپوگرافی سریف."
+        },
+        highlights: {
+          en: [
+            "Cream paper and forest green color system matched to the physical book.",
+            "Figma-style selection bounding box and cursor animation over live footage.",
+            "Minimal hierarchy diagram and orbiting worldwide shipping graphic.",
+            "Mixed sans and italic serif captions for a clean publishing aesthetic."
+          ],
+          fa: [
+            "پالت کرم و سبز زمردی استخراج‌شده مستقیم از طراحی جلد کتاب.",
+            "افکت کادر انتخاب و حرکت اشاره‌گر موس روی تصویر زنده گوینده.",
+            "نمودار درختی مینیمال و موشن مداری برای نمایش ارسال جهانی.",
+            "ترکیب فونت سنس و سریف ایتالیک برای حس گرم و ادیتوریال."
+          ]
+        }
+      },
+      {
+        id: "johnogwum",
+        category: "storytelling",
+        duration: "01:29",
+        videoSrc: "media/videos/johnogwum.mp4",
+        posterSrc: "media/posters/johnogwum.jpg",
+        palette: ["#140F10", "#DC2626", "#F4F4F5"],
+        tag: { en: "Storytelling", fa: "داستان‌گویی" },
+        title: { en: "The Real Deal Unboxing", fa: "داستان‌گویی و آنباکسینگ" },
+        summary: {
+          en: "89-second narrative short proving sustained viewer retention. Blends crimson highlight captions, Amazon #1 Best Seller UI cards, and tactile unboxing audio.",
+          fa: "ادیت روایی ۸۹ ثانیه‌ای با حفظ ریتم تا ثانیه آخر؛ ترکیب زیرنویس هایلایت قرمز، کارت اثبات اجتماعی آمازون و صدای طبیعی آنباکسینگ."
+        },
+        highlights: {
+          en: [
+            "Crimson highlight captions synced to curiosity and emotional payoff beats.",
+            "Dark textured motion-graphic interstitials to reset attention mid-story.",
+            "Clean Amazon #1 Best Seller UI callout built directly into the narrative.",
+            "Natural unboxing sound moments balanced cleanly with subtle music."
+          ],
+          fa: [
+            "هایلایت باکس قرمز همگام با نقاط عطف کنجکاوی و حس داستان.",
+            "کارت‌های موشن‌گرافیک تیره در میانه ویدیو برای ریست توجه بیننده.",
+            "کارت گرافیکی رتبه ۱ آمازون ادغام‌شده در جریان روایت.",
+            "بالانس دقیق صدای واقعی آنباکسینگ در کنار موسیقی پس‌زمینه."
+          ]
+        }
+      }
+    ];
+
+    const CRAFT_PILLARS = [
+      {
+        num: "01",
+        icon: "scissors",
+        title: { en: "Tight Narrative Pacing", fa: "ریتم دقیق و حذف مکث‌ها" },
+        desc: {
+          en: "I cut dead air, filler words, and slow setups so the first three seconds hook the viewer and the story moves cleanly.",
+          fa: "مکث‌های اضافه، تپق‌ها و شروع‌های کند حذف می‌شوند تا همان ۳ ثانیه اول مخاطب را نگه دارد."
+        }
+      },
+      {
+        num: "02",
+        icon: "layers",
+        title: { en: "After Effects & Selective AI", fa: "افتر افکت و ابزارهای کمکی AI" },
+        desc: {
+          en: "Custom UI cards and animations built in After Effects, backed selectively by AI tools to elevate B-roll while keeping full human direction.",
+          fa: "انیمیشن‌ها و کارت‌های گرافیکی در افتر افکت ساخته می‌شوند و در کنار آن از ابزارهای هوش مصنوعی به‌صورت هدفمند برای تقویت بی-رول و سرعت کار استفاده می‌شود."
+        }
+      },
+      {
+        num: "03",
+        icon: "type",
+        title: { en: "Safe-Zone Typography", fa: "تایپوگرافی تمیز و خوانا" },
+        desc: {
+          en: "Word-accurate captions placed cleanly away from your face, paired with color grading that unifies A-roll and B-roll.",
+          fa: "زیرنویس‌های دقیق در ناحیه امن کادر (بدون پوشاندن چهره) همراه با اصلاح رنگ یکپارچه."
+        }
+      },
+      {
+        num: "04",
+        icon: "volume-2",
+        title: { en: "Layered Sound & Delivery", fa: "صداگذاری و تحویل سریع" },
+        desc: {
+          en: "Clean vocal leveling, subtle SFX, and ducked music exported ready for Instagram, LinkedIn, and Shorts.",
+          fa: "بالانس صدای گوینده، افکت‌های صوتی ظریف و خروجی استاندارد آماده انتشار."
+        }
+      }
+    ];
+
+    const CATEGORIES = [
+      { id: "all", label: { en: "All", fa: "همه" } },
+      { id: "realestate", label: { en: "Real Estate", fa: "املاک لوکس" } },
+      { id: "documentary", label: { en: "Documentary", fa: "مستند و پادکست" } },
+      { id: "creator", label: { en: "Creator", fa: "تولید محتوا" } },
+      { id: "editorial", label: { en: "Editorial", fa: "ادیتوریال" } },
+      { id: "storytelling", label: { en: "Storytelling", fa: "داستان‌گویی" } }
+    ];
+
+    const I18N = {
+      en: {
+        brandName: "Amirreza Keykha",
+        brandRole: "VIDEO EDITOR",
+        navWork: "Selected Reels",
+        navCraft: "How I Edit",
+        navContact: "Contact",
+        navCta: "Let's Talk",
+        heroBadge: "Available for New Projects",
+        heroHeadline1: "Raw talking-head clips, turned into Reels people",
+        heroHeadlineAccent: "actually finish.",
+        heroBio1: "I'm Amirreza Keykha, a short-form video editor and motion designer. I work with founders, coaches, real estate brands, and podcast hosts who want clean, sharp vertical videos without recycled templates.",
+        heroBio2: "Every cut is crafted in Premiere Pro and After Effects, supported selectively by modern AI tools for custom B-roll and visual assets without losing human pacing or creative control.",
+        heroCtaWork: "Watch 5 Full Edits",
+        heroCtaContact: "Get in Touch",
+        stat1Title: "Short-Form",
+        stat1: "Reels, Shorts & TikTok",
+        stat2Title: "Custom",
+        stat2: "Motion & Sound Design",
+        stat3Title: "Remote",
+        stat3: "Worldwide Clients",
+        portraitName: "Amirreza Keykha",
+        portraitSub: "Short-Form & Motion Editor",
+        workEyebrow: "01 / SELECTED REELS",
+        workTitle1: "Five full edits.",
+        workTitle2: "Five distinct styles.",
+        workSub: "Press play directly on any reel to watch with full audio, or open Cinema Mode for the full-screen view and editing notes.",
+        craftEyebrow: "02 / HOW I EDIT",
+        craftTitle1: "Built for retention,",
+        craftTitle2: "styled for your brand.",
+        craftSub: "Every project gets its own visual language. Here is what goes into each cut before it reaches your feed.",
+        stackLabel: "CORE TOOLS",
+        contactEyebrow: "03 / GET IN TOUCH",
+        contactTitle1: "Have raw footage ready?",
+        contactTitle2: "Let's talk.",
+        contactSub: "Whether you want to book a project, send a sample clip, or ask about collaboration, reach out directly through any of the three channels below. I reply within 12 hours.",
+        liDesc: "Best for agencies, founders & long-term work.",
+        igDesc: "Quick DMs, latest Reels & before/after breakdowns.",
+        emailTitle: "Email",
+        emailDesc: "Send footage links, project briefs & references.",
+        openLinkedin: "Message on LinkedIn",
+        openInstagram: "DM on Instagram",
+        openEmail: "Send an Email",
+        footerRights: "Short-Form Video Editing & Motion Graphics.",
+        customizeLinks: "Edit My Contact Links",
+        specDuration: "DURATION",
+        specFormat: "FORMAT",
+        specPalette: "PALETTE",
+        whatIDid: "EDITING BREAKDOWN",
+        wantSimilar: "Want a similar edit? Contact me",
+        settingsTitle: "Edit Your Contact Links",
+        settingsSub: "Update your exact LinkedIn, Instagram handle, and Email.",
+        cinemaBtn: "Cinema & Notes",
+        toolAi: "AI-Assisted Workflow",
+        toolColor: "Color Grading & LUTs",
+        toolSound: "Sound Design & Mix",
+        formatVal: "Vertical Reel",
+        btnReset: "Reset",
+        btnSave: "Save"
+      },
+      fa: {
+        brandName: "امیررضا کیخا",
+        brandRole: "تدوینگر ویدیو",
+        navWork: "نمونه کارها",
+        navCraft: "سبک تدوین من",
+        navContact: "ارتباط با من",
+        navCta: "شروع گفتگو",
+        heroBadge: "آماده همکاری در پروژه‌های جدید",
+        heroHeadline1: "ویدیوهای خام تاکینگ‌هد، تبدیل به ریلزهایی که مخاطب",
+        heroHeadlineAccent: "تا آخر می‌بیند.",
+        heroBio1: "من امیررضا کیخا هستم؛ تدوینگر ویدیوهای کوتاه و طراح موشن‌گرافیک. با بنیان‌گذاران، کوچ‌ها، برندهای املاک و مجریان پادکست همکاری می‌کنم که به دنبال ویدیوهای عمودی تمیز، حرفه‌ای و بدون قالب‌های تکراری هستند.",
+        heroBio2: "هر پروژه با ترکیب پریمیر پرو و افتر افکت تدوین می‌شود و در بخش‌های کلیدی مثل بی-رول و ایده‌پردازی بصری، به‌صورت هدفمند از ابزارهای هوش مصنوعی کمک می‌گیرم تا کیفیت و ریتم انسانی کار حفظ شود.",
+        heroCtaWork: "تماشای ۵ نمونه کار کامل",
+        heroCtaContact: "ارتباط و سفارش پروژه",
+        stat1Title: "شورت‌فرم",
+        stat1: "ریلز، شورتس و تیک‌تاک",
+        stat2Title: "اختصاصی",
+        stat2: "موشن‌گرافیک و صداگذاری",
+        stat3Title: "دورکاری",
+        stat3: "همکاری با کارفرماهای جهانی",
+        portraitName: "امیررضا کیخا",
+        portraitSub: "تدوینگر شورت‌فرم و موشن‌گرافیک",
+        workEyebrow: "۰۱ / نمونه کارهای منتخب",
+        workTitle1: "پنج ویدیوی کامل.",
+        workTitle2: "پنج سبک بصری متمایز.",
+        workSub: "روی هر ویدیو مستقیم دکمه پخش را بزنید تا با صدای کامل تماشا کنید، یا روی حالت سینما کلیک کنید تا جزئیات تدوین را ببینید.",
+        craftEyebrow: "۰۲ / سبک تدوین من",
+        craftTitle1: "ساخته‌شده برای حفظ مخاطب،",
+        craftTitle2: "هماهنگ با هویت برند شما.",
+        craftSub: "هر پروژه زبان بصری مخصوص به خودش را دارد. این چهار اصل پایه تمام تدوین‌های من است.",
+        stackLabel: "ابزارهای تخصصی",
+        contactEyebrow: "۰۳ / ارتباط مستقیم",
+        contactTitle1: "پروژه‌ای در ذهن دارید؟",
+        contactTitle2: "بیایید صحبت کنیم.",
+        contactSub: "برای درخواست سفارش، ارسال فایل خام یا گفت‌وگو درباره همکاری، می‌توانید مستقیماً از طریق یکی از این سه راه ارتباطی پیام بدهید. معمولاً زیر ۱۲ ساعت پاسخ می‌دهم.",
+        liDesc: "بهترین راه برای کارفرماهای بین‌المللی، آژانس‌ها و همکاری بلندمدت.",
+        igDesc: "پیام سریع در دایرکت و دیدن جدیدترین ریلزها.",
+        emailTitle: "ایمیل",
+        emailDesc: "ارسال لینک فایل خام، بریف پروژه و رفرنس‌ها.",
+        openLinkedin: "پیام در لینکدین",
+        openInstagram: "دایرکت اینستاگرام",
+        openEmail: "ارسال ایمیل",
+        footerRights: "تدوین ویدیوهای کوتاه و موشن‌گرافیک اختصاصی.",
+        customizeLinks: "ویرایش لینک‌های ارتباطی من",
+        specDuration: "مدت‌زمان",
+        specFormat: "فرمت",
+        specPalette: "پالت رنگ",
+        whatIDid: "جزئیات تدوین این پروژه",
+        wantSimilar: "سفارش ادیت مشابه",
+        settingsTitle: "ویرایش لینک‌های ارتباطی شما",
+        settingsSub: "لینک دقیق لینکدین، اینستاگرام و ایمیل خود را وارد کنید.",
+        cinemaBtn: "حالت سینما و جزئیات",
+        toolAi: "ابزارهای کمکی AI",
+        toolColor: "اصلاح رنگ و LUT",
+        toolSound: "صداگذاری و میکس",
+        formatVal: "ویدیوی عمودی",
+        btnReset: "بازنشانی",
+        btnSave: "ذخیره"
+      }
+    };
+
+    // =========================================================================
+    // 3. STATE & HELPERS
+    // =========================================================================
+    const state = {
+      lang: "en",
+      activeCategory: "all",
+      config: loadConfig(),
+      modalProjectId: null
+    };
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.classList.remove("opacity-0", "translate-y-4");
+      el.classList.add("opacity-100", "translate-y-0");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        el.classList.add("opacity-0", "translate-y-4");
+        el.classList.remove("opacity-100", "translate-y-0");
+      }, 2600);
+    }
+
+    function copyText(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+
+    function pauseAllVideos(exceptEl) {
+      document.querySelectorAll("video").forEach((v) => {
+        if (v !== exceptEl && !v.paused) {
+          v.pause();
+        }
+      });
+    }
+
+    // =========================================================================
+    // 4. RENDER FUNCTIONS
+    // =========================================================================
+    function applyContactConfig() {
+      const c = state.config;
+      document.getElementById("btnLinkedin").href = c.linkedin;
+      document.getElementById("displayLinkedin").textContent = c.linkedin.replace(/^https?:\/\/(www\.)?/, "");
+
+      document.getElementById("btnInstagram").href = c.instagram;
+      try {
+        const handle = "@" + c.instagram.replace(/\/+$/, "").split("/").pop();
+        document.getElementById("displayInstagram").textContent = handle;
+      } catch (e) {
+        document.getElementById("displayInstagram").textContent = c.instagram;
+      }
+
+      document.getElementById("btnEmail").href = `mailto:${c.email}`;
+      document.getElementById("displayEmail").textContent = c.email;
+    }
+
+    function renderFilters() {
+      const bar = document.getElementById("filterBar");
+      bar.innerHTML = CATEGORIES.map((cat) => {
+        const count = cat.id === "all" ? PROJECTS.length : PROJECTS.filter((p) => p.category === cat.id).length;
+        const active = state.activeCategory === cat.id;
+        return `
+          <button type="button" data-cat="${cat.id}" class="rounded-full border px-3.5 py-1.5 text-xs font-medium transition ${
+            active
+              ? "border-indigo-400 bg-indigo-500 text-white"
+              : "border-white/10 bg-white/[0.04] text-zinc-300 hover:border-white/25 hover:text-white"
+          }">
+            ${cat.label[state.lang]} <span class="opacity-70">(${count})</span>
+          </button>
+        `;
+      }).join("");
+
+      bar.querySelectorAll("[data-cat]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          pauseAllVideos(null);
+          state.activeCategory = btn.getAttribute("data-cat");
+          renderFilters();
+          renderPortfolioGrid();
+        });
+      });
+    }
+
+    function renderPortfolioGrid() {
+      const grid = document.getElementById("portfolioGrid");
+      const list = state.activeCategory === "all"
+        ? PROJECTS
+        : PROJECTS.filter((p) => p.category === state.activeCategory);
+
+      grid.innerHTML = list.map((p) => `
+        <article class="editorial-card flex flex-col overflow-hidden rounded-3xl">
+          <!-- Real 9:16 HTML5 Video Container -->
+          <div class="relative aspect-[9/16] w-full overflow-hidden bg-black">
+            <video
+              id="vid-${p.id}"
+              class="reel-video h-full w-full object-cover"
+              src="${p.videoSrc}"
+              poster="${p.posterSrc}"
+              controls
+              playsinline
+              preload="metadata"
+            ></video>
+
+            <!-- Top Floating Badges (pointer-events-none so video controls always work) -->
+            <div class="pointer-events-none absolute left-3 right-3 top-3 flex items-center justify-between">
+              <span class="rounded-full border border-white/15 bg-black/65 px-2.5 py-1 text-[10px] font-medium text-zinc-100 backdrop-blur-md">
+                ${p.tag[state.lang]}
+              </span>
+              <span class="rounded-full bg-black/65 px-2.5 py-1 font-mono-code text-[10px] text-indigo-300 backdrop-blur-md">
+                ${p.duration}
+              </span>
+            </div>
+          </div>
+
+          <!-- Card Metadata -->
+          <div class="flex flex-1 flex-col justify-between p-5">
+            <div>
+              <h3 class="text-base font-semibold text-zinc-100">${p.title[state.lang]}</h3>
+              <p class="mt-2 text-xs leading-relaxed text-zinc-400">${p.summary[state.lang]}</p>
+            </div>
+
+            <div class="mt-4 flex items-center justify-between border-t border-white/10 pt-3.5">
+              <div class="flex items-center gap-1.5">
+                ${p.palette.map((hex) => `<span class="h-3 w-3 rounded-full border border-white/20" style="background:${hex}" title="${hex}"></span>`).join("")}
+              </div>
+              <button type="button" data-open-cinema="${p.id}" class="inline-flex items-center gap-1.5 rounded-lg border border-indigo-400/30 bg-indigo-400/10 px-3 py-1.5 text-[11px] font-medium text-indigo-300 transition hover:bg-indigo-500 hover:text-white">
+                <i data-lucide="maximize-2" class="h-3 w-3"></i>
+                <span>${I18N[state.lang].cinemaBtn}</span>
+              </button>
+            </div>
+          </div>
+        </article>
+      `).join("");
+
+      lucide.createIcons();
+
+      // Auto-pause other videos when one starts playing
+      grid.querySelectorAll("video").forEach((vid) => {
+        vid.addEventListener("play", () => pauseAllVideos(vid));
+      });
+
+      // Cinema modal trigger
+      grid.querySelectorAll("[data-open-cinema]").forEach((btn) => {
+        btn.addEventListener("click", () => openCinemaModal(btn.getAttribute("data-open-cinema")));
+      });
+    }
+
+    function renderCraftGrid() {
+      const grid = document.getElementById("craftGrid");
+      grid.innerHTML = CRAFT_PILLARS.map((item) => `
+        <div class="editorial-card rounded-2xl p-5">
+          <div class="flex items-center justify-between">
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl border border-indigo-400/25 bg-indigo-400/10 text-indigo-300">
+              <i data-lucide="${item.icon}" class="h-4 w-4"></i>
+            </div>
+            <span class="font-mono-code text-xs text-zinc-500">${item.num}</span>
+          </div>
+          <h3 class="mt-4 text-sm font-semibold text-zinc-100">${item.title[state.lang]}</h3>
+          <p class="mt-2 text-xs leading-relaxed text-zinc-400">${item.desc[state.lang]}</p>
+        </div>
+      `).join("");
+      lucide.createIcons();
+    }
+
+    function openCinemaModal(projectId) {
+      const proj = PROJECTS.find((p) => p.id === projectId);
+      if (!proj) return;
+      pauseAllVideos(null);
+      state.modalProjectId = projectId;
+
+      const player = document.getElementById("modalVideoPlayer");
+      player.src = proj.videoSrc;
+      player.poster = proj.posterSrc;
+      player.currentTime = 0;
+
+      renderCinemaMetadata(proj);
+
+      const modal = document.getElementById("cinemaModal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+      document.body.style.overflow = "hidden";
+      player.play().catch(() => {});
+    }
+
+    function renderCinemaMetadata(proj) {
+      document.getElementById("modalTag").textContent = proj.tag[state.lang];
+      document.getElementById("modalTitle").textContent = proj.title[state.lang];
+      document.getElementById("modalSummary").textContent = proj.summary[state.lang];
+      document.getElementById("modalDuration").textContent = proj.duration;
+      document.getElementById("modalPalette").innerHTML = proj.palette
+        .map((hex) => `<span class="h-4 w-4 rounded-full border border-white/25" style="background:${hex}" title="${hex}"></span>`)
+        .join("");
+      document.getElementById("modalHighlights").innerHTML = proj.highlights[state.lang]
+        .map((line) => `
+          <li class="flex items-start gap-2">
+            <i data-lucide="check-circle-2" class="mt-0.5 h-3.5 w-3.5 shrink-0 text-indigo-400"></i>
+            <span>${line}</span>
+          </li>
+        `)
+        .join("");
+      lucide.createIcons();
+    }
+
+    function closeCinemaModal() {
+      const player = document.getElementById("modalVideoPlayer");
+      player.pause();
+      state.modalProjectId = null;
+      const modal = document.getElementById("cinemaModal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      document.body.style.overflow = "";
+    }
+
+    function applyLanguage() {
+      const dict = I18N[state.lang];
+      document.documentElement.lang = state.lang;
+      document.documentElement.dir = state.lang === "fa" ? "rtl" : "ltr";
+      document.getElementById("langToggleLabel").textContent = state.lang === "en" ? "فارسی" : "EN";
+
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) el.textContent = dict[key];
+      });
+
+      renderFilters();
+      renderPortfolioGrid();
+      renderCraftGrid();
+      if (state.modalProjectId) {
+        const proj = PROJECTS.find((p) => p.id === state.modalProjectId);
+        if (proj) renderCinemaMetadata(proj);
+      }
+      lucide.createIcons();
+    }
+
+    // =========================================================================
+    // 5. INIT & EVENTS
+    // =========================================================================
+    document.addEventListener("DOMContentLoaded", () => {
+      // Language switch
+      document.getElementById("langToggleBtn").addEventListener("click", () => {
+        pauseAllVideos(null);
+        state.lang = state.lang === "en" ? "fa" : "en";
+        applyLanguage();
+      });
+
+      // Mobile menu
+      const mobileBtn = document.getElementById("mobileMenuBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      mobileBtn.addEventListener("click", () => mobileMenu.classList.toggle("hidden"));
+      document.querySelectorAll(".mobile-nav-link").forEach((a) => {
+        a.addEventListener("click", () => mobileMenu.classList.add("hidden"));
+      });
+
+      // Cinema modal close & jump
+      document.getElementById("closeCinemaBtn").addEventListener("click", closeCinemaModal);
+      document.getElementById("cinemaModal").addEventListener("click", (e) => {
+        if (e.target.id === "cinemaModal") closeCinemaModal();
+      });
+      document.getElementById("modalContactJump").addEventListener("click", closeCinemaModal);
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && state.modalProjectId) closeCinemaModal();
+      });
+
+      // Copy buttons on Contact cards
+      document.querySelectorAll("[data-copy-key]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const key = btn.getAttribute("data-copy-key");
+          const val = state.config[key];
+          if (!val) return;
+          copyText(val);
+          showToast(state.lang === "en" ? `Copied ${val}` : `کپی شد: ${val}`);
+        });
+      });
+
+      // Settings modal
+      const settingsModal = document.getElementById("settingsModal");
+      document.getElementById("openSettingsBtn").addEventListener("click", () => {
+        document.getElementById("cfgLinkedin").value = state.config.linkedin;
+        document.getElementById("cfgInstagram").value = state.config.instagram;
+        document.getElementById("cfgEmail").value = state.config.email;
+        settingsModal.classList.remove("hidden");
+        settingsModal.classList.add("flex");
+      });
+
+      const closeSettings = () => {
+        settingsModal.classList.add("hidden");
+        settingsModal.classList.remove("flex");
+      };
+      document.getElementById("closeSettingsBtn").addEventListener("click", closeSettings);
+      settingsModal.addEventListener("click", (e) => {
+        if (e.target.id === "settingsModal") closeSettings();
+      });
+
+      document.getElementById("resetSettingsBtn").addEventListener("click", () => {
+        state.config = { ...DEFAULT_CONFIG };
+        saveConfig(state.config);
+        applyContactConfig();
+        closeSettings();
+        showToast(state.lang === "en" ? "Contact links reset." : "لینک‌ها به حالت پیش‌فرض برگشتند.");
+      });
+
+      document.getElementById("settingsForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        state.config.linkedin = document.getElementById("cfgLinkedin").value.trim();
+        state.config.instagram = document.getElementById("cfgInstagram").value.trim();
+        state.config.email = document.getElementById("cfgEmail").value.trim();
+        saveConfig(state.config);
+        applyContactConfig();
+        closeSettings();
+        showToast(state.lang === "en" ? "Contact links saved!" : "لینک‌های ارتباطی ذخیره شدند!");
+      });
+
+      applyContactConfig();
+      applyLanguage();
+    });
+  </script>
+</body>
+</html>
